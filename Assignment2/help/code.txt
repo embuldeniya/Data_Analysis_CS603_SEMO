@@ -1,0 +1,145 @@
+import json
+import itertools as it
+
+class Employee: 
+    'Common base class for all employees'
+    empCount = 0 
+
+    def __init__(self, name, salary, age): 
+        self.name = name
+        self.salary = salary
+        self.__age = age
+        Employee.empCount += 1
+
+    def displayCount(self):
+        print("Total Employee: {0}".format(Employee.empCount))
+
+    def displayEmployee(self):
+        print("Name : {0}, \tSalary: {1}, \tAge: {2}".format(self.name,self.salary, self.__age))
+        
+    def toString(self):
+        return "Name : {0}, \tSalary: {1}, \tAge: {2}".format(self.name,self.salary, self.__age)
+
+    def doWork(self):
+        print("I, {0}, doing some work".format(self.name))
+        
+    def getAge(self):
+        return self.__age
+        
+class Company:
+    def __init__ (self, name, employees):
+        self.name = name
+        self.employees = employees
+    
+    def displayCompany(self):
+        print("\nCompany name: {0}, Number of employees: {1}".format(self.name, len(self.employees)))
+        
+    def doWork(self):
+        [employee.doWork() for employee in self.employees]    
+        
+        
+#"""        
+# creating 5 Employee objects
+emp1 = Employee("John First", 5000, 25)
+emp2 = Employee("Jane Second", 6000, 35)
+emp3 = Employee("Jack Third", 7000, 45)
+emp4 = Employee("Nick Forth", 8000, 55)
+emp5 = Employee("Sara Fifth", 9000, 65)
+
+# pack them into list
+emp_list = [emp1, emp2, emp3, emp4, emp5]
+
+# display the list to be sure
+[emp.displayEmployee() for emp in emp_list]
+
+# and repack into another list just the top 3 by salary
+top_salaried = [emp for emp in sorted(emp_list, key = lambda x: x.salary, reverse = True)[:3]]
+
+# and display the result
+print("\nand now the top 3:")            
+[emp.displayEmployee() for emp in top_salaried]
+
+
+
+
+# create an instance of the Compaty Class re-using a list of Employees from before              
+corp = Company("ZORG", emp_list)
+
+# display the newly created company
+corp.displayCompany()
+
+# make the Company do work (which makes all the employees to do work)
+corp.doWork()
+#"""
+
+
+
+# read 11 new employees from json file
+with open("C:\\Users\\sirruph\\CS603\\assignment_02\\employees.json","r") as f:
+    jsondata = json.load(f)
+f.close()
+    
+# create list of all employees by list comprehension
+# (and each employee is a dictionary)   
+employee_data_list = [item for lines in jsondata.values() for item in lines]
+
+
+# or we can do the same by generator
+# here is generator itself
+def getEmployee(some_sequence):
+    for x in some_sequence:
+        yield x;
+        
+# the list we'll be adding employees to
+employees = []
+
+# use generator to get next dictionary
+for entry in getEmployee(employee_data_list):
+    # create employee
+    temp_emp = Employee(entry["name"], entry["salary"], entry["age"])
+    # appent it to list
+    employees.append(temp_emp)
+    
+# sorting employees by their name
+employees.sort(key = lambda x: x.name)
+
+# raise everyone's salary by 5% obtaining each employee from generator
+for emp in getEmployee(employees):
+    emp.salary *= 1.05;
+    
+# creating a new dictionary with keys 1 to 11 and values of each employee
+emp_dict = {}
+for k, v in enumerate(getEmployee(employees)):
+    emp_dict.update({k: v})
+
+# pring this dictionary    
+print("\n*** employee's dictionary ***")
+for k, v in emp_dict.items():
+    print("key:", k, "   value:", v.toString())
+    
+# 1. <20   2. 21-30   3. 31-50   4.51-65   5. 65>
+print("\ngrouping employees by age")
+
+# auxiliary function which returns age group based on age
+def determine_age_group(age):
+    if age <= 20:
+        return "under 20"
+    elif 20 < age <= 30:
+        return "21-30"
+    elif 30 < age <= 50:
+        return "31-50"
+    elif 50 < age <= 65:
+        return "51-65"
+    else:
+        return "over 65"
+    
+# sorting employees by their age for neater output
+employees.sort(key = lambda x: x.getAge())  
+
+
+# group them using auziliary function as a key
+for key, group in it.groupby(employees, lambda x: determine_age_group(x.getAge())):
+    print(key)
+    
+    for emp in group:
+        print("\t", emp.toString())

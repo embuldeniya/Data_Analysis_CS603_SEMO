@@ -1,0 +1,65 @@
+{
+"Employee":[
+	{
+        "name":"Sam",
+        "age":22,
+        "salary":2000
+    },
+	
+	{
+        "name":"Ram",
+        "age":56,
+        "salary":85400
+    },
+	
+	{
+        "name":"Tintin",
+        "age":76,
+        "salary":58780
+    },
+	
+	{
+        "name":"Pam",
+        "age":14,
+        "salary":6000
+    },
+	
+	{
+        "name":"Queen",
+        "age":42,
+        "salary":22000
+    },
+	
+	{
+        "name":"Oswald",
+        "age":66,
+        "salary":28750
+    },
+	
+	{
+        "name":"Chi",
+        "age":37,
+        "salary":38780
+    },
+	
+	{
+        "name":"Troy",
+        "age":34,
+        "salary":6785
+    },
+	
+	{
+        "name":"Kane",
+        "age":69,
+        "salary":188780
+    },
+	
+	{
+        "name":"Suriya",
+        "age":88,
+        "salary":36785
+    
+    }
+    
+    ]
+}
